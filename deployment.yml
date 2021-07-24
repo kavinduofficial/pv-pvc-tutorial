@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: school-service-app
+  namespace: pvc-ns
+  labels:
+    name: school-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: school-service-app
+  template:
+    metadata:
+      labels:
+        name: school-service-app
+    spec:
+      volumes:
+      - name: mounted-storage
+        persistentVolumeClaim:
+          claimName: kavindu-pvc
+      containers:
+      - name: school-service-app
+        image: rahulwagh17/kubernetes:jhooq-k8s-springboot
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "128m"
+          limits:
+            memory: "1024Mi"
+            cpu: "256m"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /home/vagrant/storage
+          name: mounted-storage
